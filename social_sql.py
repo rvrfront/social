@@ -18,7 +18,8 @@
 # * PTOS - Cualquier funcionalidad extra que aporte valor a la red social
 
 import sqlite3 as sq3
-
+import tkinter
+from tkinter import messagebox
 
 def createDB(name):
     if isinstance(name, str) and name != '':
@@ -30,7 +31,7 @@ def createDB(name):
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             name VARCHAR(40) NOT NULL,
                             age INTEGER NOT NULL,
-                            gender VARCHAR(1) NOT NULL,
+                            gender VARCHAR(8) NOT NULL,
                             nationality VARCHAR(30) NOT NULL,
                             nick VARCHAR(15) NOT NULL,
                             password VARCHAR(20) NOT NULL
@@ -39,10 +40,11 @@ def createDB(name):
 
             cursor.execute('''
                             CREATE TABLE IF NOT EXISTS posts (
-                            id INTEGER NOT NULL,
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
                             title VARCHAR(50) NOT NULL,
                             description VARCHAR(125) NOT NULL,
-                            user_id INTEGER PRIMARY KEY AUTOINCREMENT
+                            user_id INTEGER NOT NULL,
+                            FOREIGN KEY(user_id) REFERENCES users(id)
                             )
                             ''')
 
@@ -74,5 +76,58 @@ def createDB(name):
     else:
         print("You have typed a wrong DB name!")
 
+
+def updateUserDB(id, name, age, gender, nationality, nickname, password):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("UPDATE users SET name=? WHERE id=?", (name, id))
+    cursor.execute("UPDATE users SET age=? WHERE id=?", (age, id))
+    cursor.execute("UPDATE users SET gender=? WHERE id=?", (gender, id))
+    cursor.execute("UPDATE users SET nationality=? WHERE id=?", (nationality, id))
+    cursor.execute("UPDATE users SET nick=? WHERE id=?", (nickname, id))
+    cursor.execute("UPDATE users SET password=? WHERE id=?", (password, id))
+    connection.commit()
+    connection.close()
+
+def searchAnUser(id):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT name FROM users WHERE id=?", (id,))
+    user = cursor.fetchone()
+    print("Searched user is: ", user)
+    return user
+
+def CreateAPost(location, id, title, description,):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO posts VALUES (null,?,?,?)", (title, description,id))
+    connection.commit()
+    connection.close()
+    location.destroy()
+
+def getPosts():
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM posts")
+    posts = cursor.fetchall()
+    connection.commit()
+    connection.close()
+    return posts
+
+def getOnePost(id):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT title, description, user_id FROM posts WHERE id=?", (id,))
+    post = cursor.fetchall()
+    connection.commit()
+    connection.close()
+    return post
+
+def delPost(id):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM posts WHERE id=?", (id,))
+    connection.commit()
+    connection.close()
 
 createDB("social.db")

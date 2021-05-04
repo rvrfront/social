@@ -2,26 +2,86 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import sqlite3 as sq3
+from social_sql import updateUserDB, searchAnUser, CreateAPost, getPosts, getOnePost, delPost
+
+def deletePost(location, id):
+    decision = messagebox.askquestion(title="Delete post...", message=f"Are you sure to del post {id}", icon="warning")
+    if decision == "yes":
+        delPost(id)
+        messagebox.showwarning(title="Post deleted...", message=f"You have just deleted post: {id}")
+        location.destroy()
+
+def showOnePost(id):
+    post = getOnePost(id)
+    title = post[0][1]
+    author = post[0][2]
+    message = f"Message: {post[0][1]}"
+    print("Post: ", post)
+    postWindow = tk.Toplevel(window)
+    postWindow.geometry("700x700")
+    postTitle = tk.Label(postWindow, text=f"Title: {title}")
+    postTitle.place(x=10, y=10, relwidth=0.7, relheight=0.1)
+    postMessage = tk.Text(postWindow)
+    postMessage.insert(tk.INSERT, message)
+    postMessage.insert(tk.END, f"\ndeveloped with python & tkinter")
+    postMessage.config(state=tk.DISABLED)
+    postMessage.place(x=10, y=50, relwidth=0.7, relheight=0.1)
+    postAuthor = tk.Label(postWindow, text=f"Author id: {author}")
+    postAuthor.place(x=10, y=130, relwidth=0.4, relheight=0.05)
+    buttonToDelete = tk.Button(postWindow, text="delete", command=lambda: deletePost(postWindow,id))
+    buttonToDelete.place(x=10, y=170, relwidth=0.25, relheight=0.05)
+    buttonToEdit = tk.Button(postWindow, text="edit post", command=lambda: print("Edit post..."))
+    buttonToEdit.place(x=250, y=170, relwidth=0.25, relheight=0.05)
+    buttonLikes = tk.Button(postWindow, text="likes!", command=lambda: print("Likes..."))
+    buttonLikes.place(x=10, y=240, relwidth=0.7, relheight=0.05)
 
 
-def updateUser(id, name, age, gender, nationality, nickname, password, password2):
+
+def showPosts(location):
+    posts = getPosts()
+    print("Posts: ", posts)
+    incx = 125
+    incy = 85
+    for post in posts:
+        id= post[0]
+        title = post[1]
+        print("id from showPosts:", id)
+        print("title from showPosts: ", title)
+        tk.Button(location, text=title, command=lambda: showOnePost(id)).place(x=incx, y=incy, relwidth=0.5, relheight=0.1)
+
+def createPostAction(id, nickname, password):
+    try:
+        getUser = searchAnUser(id)
+        print(f"User: {getUser} || type: {type(getUser)}")
+    except:
+        messagebox.showwarning(title="Warning...", message="There was a problem...")
+
+    post = tk.Toplevel(window)
+    post.geometry("500x500")
+    postTitleLabel = tk.Label(post, text="Please, insert the tittle: ")
+    postTitleLabel.place(x=70, y=25, relwidth=0.7, relheight=0.1)
+    postTitleEntry = tk.Entry(post)
+    postTitleEntry.place(x=70, y=55, relwidth=0.7, relheight=0.1)
+    postLabelMessage = tk.Label(post, text="Please, insert the message: ")
+    postLabelMessage.place(x=70, y=95, relwidth=0.7, relheight=0.1)
+    postEntryMessage = tk.Entry(post)
+    postEntryMessage.place(x=70, y=125, relwidth=0.7, relheight=0.4)
+    postAuthorLabel = tk.Label(post, text=getUser[0])
+    postAuthorLabel.place(x=70, y=320, relwidth=0.7, relheight=0.1)
+    postButton = tk.Button(post, text="submit", command=lambda: CreateAPost(post, id, postTitleEntry.get(),
+                                                                            postEntryMessage.get()))
+    postButton.place(x=70, y=370, relwidth=0.7, relheight=0.1)
+
+def updateUser(location, id, name, age, gender, nationality, nickname, password, password2):
     if password == password2:
         try:
-            connection = sq3.connect("social.db")
-            cursor = connection.cursor()
-            cursor.execute("UPDATE users SET name=? WHERE id=?",(name, id))
-            cursor.execute("UPDATE users SET age=? WHERE id=?", (age, id))
-            cursor.execute("UPDATE users SET gender=? WHERE id=?", (gender, id))
-            cursor.execute("UPDATE users SET nationality=? WHERE id=?", (nationality, id))
-            cursor.execute("UPDATE users SET nick=? WHERE id=?", (nickname, id))
-            cursor.execute("UPDATE users SET password=? WHERE id=?", (password, id))
-            connection.commit()
-            connection.close()
+            updateUserDB(id, name, age, gender, nationality, nickname, password)
             messagebox.showinfo(title="User updated", message=f"user: {id} updated successfully")
         except:
             messagebox.showerror(title="Error...", message="There was an error...")
     else:
         messagebox.showwarning(title="Passwords...", message="Passwords are not the same value...")
+    location.destroy()
 
 def editProfileAction(id, nick, name):
     countries = ["Austria", "Belgium", "Bulgaria", "Croatia", "Republic of Cyprus", "Czech Republic", "Denmark",
@@ -60,8 +120,9 @@ def editProfileAction(id, nick, name):
     passwordLabel2.place(x = 10, y=440, relwidth=0.8, relheight=0.08)
     passwordEntry2 = tk.Entry(editProfile, show="*")
     passwordEntry2.place(x=10, y=470, relwidth=0.8, relheight=0.08)
-    buttonToSave = tk.Button(editProfile, text="update user", command=lambda: updateUser(id, nameEntry.get(), ageEntry.get(), gender.get(), nationality.get(), nickEntry.get(), passwordEntry.get(), passwordEntry2.get()))
+    buttonToSave = tk.Button(editProfile, text="update user", command=lambda: updateUser(editProfile, id, nameEntry.get(), ageEntry.get(), gender.get(), nationality.get(), nickEntry.get(), passwordEntry.get(), passwordEntry2.get()))
     buttonToSave.place(x=10, y=510, relwidth=0.8, relheight=0.08)
+
 
 
 def showUserAction(id, nick, password):
@@ -70,12 +131,13 @@ def showUserAction(id, nick, password):
     createPostFrame = tk.Frame(userProfile)
     createPostFrame.pack()
     createPostFrame.place(x=25, y=25, relwidth=0.25, height= 35)
-    createPostButton = tk.Button(createPostFrame, text="create a new post", command=lambda: print("This is a mock action!"))
+    createPostButton = tk.Button(createPostFrame, text="create a new post", command=lambda: createPostAction(id, nick, password))
     createPostButton.pack()
     editProfileFrame = tk.Frame(userProfile)
     editProfileFrame.place(x=190, y=25, relwidth=0.25, height=35)
     editProfileButton = tk.Button(editProfileFrame, text="edit profile", command=lambda: editProfileAction(id, nick, password))
     editProfileButton.pack()
+    showPosts(userProfile)
 
 
 def signInUser(location, name, password):
@@ -162,7 +224,7 @@ def registerAction(location):
     nickEntry.pack(side="top")
     passwordFrame = tk.Frame(register)
     passwordFrame.pack(side="top")
-    passwordLabel = tk.Label(passwordFrame, text="Please, insert your passwprd")
+    passwordLabel = tk.Label(passwordFrame, text="Please, insert your password")
     passwordLabel.pack(side="top")
     passwordEntry = tk.Entry(passwordFrame, show="*")
     passwordEntry.pack(side="top")
@@ -172,6 +234,11 @@ def registerAction(location):
     passwordEntry2.pack(side="top")
     buttonFrame = tk.Frame(register)
     buttonFrame.pack(side="top")
+    if gender.get() == 1:
+        gender.set("Mujer")
+    elif gender.get() == 2:
+        gender.set("Hombre")
+    print("Gender: ", gender.get())
     registerButton = tk.Button(buttonFrame, text="register", command=lambda: registerUser(register, nameEntry.get(),ageEntry.get(), gender.get(),nationality.get(), nickEntry.get(), passwordEntry.get(), passwordEntry2.get()))
     registerButton.pack(side="top")
 
