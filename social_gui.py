@@ -10,6 +10,7 @@ def deletePost(location, id):
         delPost(id)
         messagebox.showwarning(title="Post deleted...", message=f"You have just deleted post: {id}")
         location.destroy()
+        showAllPosts.destroy()
 
 def showOnePost(id):
     post = getOnePost(id)
@@ -37,18 +38,25 @@ def showOnePost(id):
 
 
 
-def showPosts(location):
+def showPosts():
     posts = getPosts()
     print("Posts: ", posts)
+    global showAllPosts
+    showAllPosts = tk.Toplevel(window)
+    showAllPosts.geometry("500x500")
     incx = 125
     incy = 85
-    for post in posts:
-        id= post[0]
-        title = post[1]
-        print("id from showPosts:", id)
-        print("title from showPosts: ", title)
-        tk.Button(location, text=title, command=lambda: showOnePost(id)).place(x=incx, y=incy, relwidth=0.5, relheight=0.1)
-
+    if len(posts) > 1:
+        for post in posts:
+            id= post[0]
+            title = post[1]
+            print("id from showPosts:", id)
+            print("title from showPosts: ", title)
+            tk.Button(showAllPosts, text=title, command=lambda: showOnePost(id)).place(x=incx, y=incy, relwidth=0.5, relheight=0.1)
+    else:
+        decision = messagebox.askquestion(title="No posts...", message="Excuse me, but There is no any post to show!", icon="warning")
+        if decision == "yes":
+            showAllPosts.destroy()
 def createPostAction(id, nickname, password):
     try:
         getUser = searchAnUser(id)
@@ -137,8 +145,9 @@ def showUserAction(id, nick, password):
     editProfileFrame.place(x=190, y=25, relwidth=0.25, height=35)
     editProfileButton = tk.Button(editProfileFrame, text="edit profile", command=lambda: editProfileAction(id, nick, password))
     editProfileButton.pack()
-    showPosts(userProfile)
-
+    # showPosts(userProfile)
+    buttonToShowPosts = tk.Button(userProfile, text="show posts", command=lambda: showPosts())
+    buttonToShowPosts.place(x=190, y=65, relwidth=0.7, height=35)
 
 def signInUser(location, name, password):
     try:
