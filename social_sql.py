@@ -106,6 +106,30 @@ def CreateAPost(location, id, title, description,):
     connection.close()
     location.destroy()
 
+def updatePost(location1, location2,location3, id, title, message):
+    print("id from updatePost sql: ", id)
+    print("title from updatepost sql :", title)
+    print("message from updatepost sql: ", message)
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("UPDATE posts SET title=? WHERE id=?", (title, id,))
+    cursor.execute("UPDATE posts SET description=? WHERE id=?", (message, id,))
+    connection.commit()
+    connection.close()
+    location3.destroy()
+    location2.destroy()
+    location1.destroy()
+
+def getPost(id):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM posts WHERE id=?", (id,))
+    post = cursor.fetchall()
+    print("Post from getPost social_sql: ", post)
+    connection.commit()
+    connection.close()
+    return post
+
 def getPosts():
     connection = sq3.connect("social.db")
     cursor = connection.cursor()

@@ -2,7 +2,29 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import sqlite3 as sq3
-from social_sql import updateUserDB, searchAnUser, CreateAPost, getPosts, getOnePost, delPost
+from social_sql import updateUserDB, searchAnUser, CreateAPost, getPosts, getPost, getOnePost, delPost, updatePost
+
+def editPostAction(location, id):
+    editPost = tk.Toplevel(window)
+    editPost.geometry("500x500")
+    post = getPost(id)
+    postTitle = tk.StringVar()
+    postMessage = tk.StringVar()
+    print("Post from editPostAction: ", post)
+    print("Elementos del post editPostAction: ", post[0][1])
+    print("Elementos del post editPostAction: ", post[0][2])
+    postTitleLabel = tk.Label(editPost, text="Title: ")
+    postTitleLabel.place(x=10, y=10, relwidth=0.15, relheight=0.1)
+    postTitleEntry = tk.Entry(editPost, textvariable=postTitle)
+    postTitle.set(post[0][1])
+    postTitleEntry.place(x=70, y=10, relwidth=0.5, relheight=0.1)
+    postMessageLabel = tk.Label(editPost, text="Message: ")
+    postMessageLabel.place(x=10, y= 60, relwidth=0.15, relheight=0.1)
+    postMessageEntry = tk.Entry(editPost, textvariable=postMessage)
+    postMessage.set(post[0][2])
+    postMessageEntry.place(x=70, y=60, relwidth=0.5, relheight=0.3)
+    postUpdateButton = tk.Button(editPost, text="update", command=lambda h=post: updatePost(showAllPosts,editPost,location, id, postTitleEntry.get(), postMessageEntry.get()))
+    postUpdateButton.place(x=80, y=220, relwidth=0.25, relheight=0.1)
 
 def deletePost(location, id):
     decision = messagebox.askquestion(title="Delete post...", message=f"Are you sure to del post {id}", icon="warning")
@@ -29,9 +51,9 @@ def showOnePost(id):
     postMessage.place(x=10, y=50, relwidth=0.7, relheight=0.1)
     postAuthor = tk.Label(postWindow, text=f"Author id: {author}")
     postAuthor.place(x=10, y=130, relwidth=0.4, relheight=0.05)
-    buttonToDelete = tk.Button(postWindow, text="delete", command=lambda c=id: deletePost(postWindow,c))
+    buttonToDelete = tk.Button(postWindow, text="delete", command=lambda f=id: deletePost(postWindow,f))
     buttonToDelete.place(x=10, y=170, relwidth=0.25, relheight=0.05)
-    buttonToEdit = tk.Button(postWindow, text="edit post", command=lambda: print("Edit post..."))
+    buttonToEdit = tk.Button(postWindow, text="edit post", command=lambda g=id: editPostAction(postWindow,g))
     buttonToEdit.place(x=250, y=170, relwidth=0.25, relheight=0.05)
     buttonLikes = tk.Button(postWindow, text="likes!", command=lambda: print("Likes..."))
     buttonLikes.place(x=10, y=240, relwidth=0.7, relheight=0.05)
