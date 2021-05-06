@@ -41,18 +41,21 @@ def showOnePost(id):
 def showPosts():
     posts = getPosts()
     print("Posts: ", posts)
+    print("Length of Posts: ", len(posts))
     global showAllPosts
     showAllPosts = tk.Toplevel(window)
-    showAllPosts.geometry("500x500")
-    incx = 125
-    incy = 85
-    if len(posts) > 1:
+    showAllPosts.geometry("500x600")
+    incx = 25
+    incy = 25
+    if len(posts) >= 1:
         for post in posts:
             id= post[0]
             title = post[1]
+            user_id = post[3]
             print("id from showPosts:", id)
             print("title from showPosts: ", title)
-            tk.Button(showAllPosts, text=title, command=lambda: showOnePost(id)).place(x=incx, y=incy, relwidth=0.5, relheight=0.1)
+            tk.Button(showAllPosts, text=f"title: {title} || user: {user_id}", command=lambda: showOnePost(id)).place(x=incx, y=incy, relwidth=0.9, relheight=0.1)
+            incy += 85
     else:
         decision = messagebox.askquestion(title="No posts...", message="Excuse me, but There is no any post to show!", icon="warning")
         if decision == "yes":
@@ -147,7 +150,7 @@ def showUserAction(id, nick, password):
     editProfileButton.pack()
     # showPosts(userProfile)
     buttonToShowPosts = tk.Button(userProfile, text="show posts", command=lambda: showPosts())
-    buttonToShowPosts.place(x=190, y=65, relwidth=0.7, height=35)
+    buttonToShowPosts.place(x=60, y=65, relwidth=0.7, height=35)
 
 def signInUser(location, name, password):
     try:

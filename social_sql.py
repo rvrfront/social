@@ -100,7 +100,8 @@ def searchAnUser(id):
 def CreateAPost(location, id, title, description,):
     connection = sq3.connect("social.db")
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO posts VALUES (null,?,?,?)", (title, description,id))
+    postItem = (title, description, id)
+    cursor.execute("INSERT INTO posts (title,description, user_id) VALUES (?,?,?)", postItem)
     connection.commit()
     connection.close()
     location.destroy()
