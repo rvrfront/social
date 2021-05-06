@@ -29,7 +29,7 @@ def showOnePost(id):
     postMessage.place(x=10, y=50, relwidth=0.7, relheight=0.1)
     postAuthor = tk.Label(postWindow, text=f"Author id: {author}")
     postAuthor.place(x=10, y=130, relwidth=0.4, relheight=0.05)
-    buttonToDelete = tk.Button(postWindow, text="delete", command=lambda: deletePost(postWindow,id))
+    buttonToDelete = tk.Button(postWindow, text="delete", command=lambda c=id: deletePost(postWindow,c))
     buttonToDelete.place(x=10, y=170, relwidth=0.25, relheight=0.05)
     buttonToEdit = tk.Button(postWindow, text="edit post", command=lambda: print("Edit post..."))
     buttonToEdit.place(x=250, y=170, relwidth=0.25, relheight=0.05)
@@ -47,14 +47,15 @@ def showPosts():
     showAllPosts.geometry("500x600")
     incx = 25
     incy = 25
+    postsList = list()
     if len(posts) >= 1:
         for post in posts:
-            id= post[0]
+            id = post[0]
             title = post[1]
             user_id = post[3]
             print("id from showPosts:", id)
             print("title from showPosts: ", title)
-            tk.Button(showAllPosts, text=f"title: {title} || user: {user_id}", command=lambda: showOnePost(id)).place(x=incx, y=incy, relwidth=0.9, relheight=0.1)
+            postsList.append(tk.Button(showAllPosts, text=f"title: {title} || user: {user_id}", command=lambda c=id: showOnePost(c)).place(x=incx, y=incy, relwidth=0.9, relheight=0.1))
             incy += 85
     else:
         decision = messagebox.askquestion(title="No posts...", message="Excuse me, but There is no any post to show!", icon="warning")
