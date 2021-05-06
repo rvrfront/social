@@ -155,4 +155,14 @@ def delPost(id):
     connection.commit()
     connection.close()
 
+def getUserId(name, password):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT id FROM users WHERE nick =? AND password=?", (name, password,))
+    id = cursor.fetchall()
+    print("Id from getUSer sql: ", id)
+    connection.commit()
+    connection.close()
+    return id
+
 createDB("social.db")

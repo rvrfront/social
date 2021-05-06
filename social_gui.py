@@ -2,29 +2,42 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import sqlite3 as sq3
-from social_sql import updateUserDB, searchAnUser, CreateAPost, getPosts, getPost, getOnePost, delPost, updatePost
+from social_sql import updateUserDB, searchAnUser, CreateAPost, getPosts, getPost, getOnePost, delPost, updatePost, getUserId
 
 def editPostAction(location, id):
+    criticalId = getUserId(user, password)
     editPost = tk.Toplevel(window)
     editPost.geometry("500x500")
     post = getPost(id)
-    postTitle = tk.StringVar()
-    postMessage = tk.StringVar()
-    print("Post from editPostAction: ", post)
-    print("Elementos del post editPostAction: ", post[0][1])
-    print("Elementos del post editPostAction: ", post[0][2])
-    postTitleLabel = tk.Label(editPost, text="Title: ")
-    postTitleLabel.place(x=10, y=10, relwidth=0.15, relheight=0.1)
-    postTitleEntry = tk.Entry(editPost, textvariable=postTitle)
-    postTitle.set(post[0][1])
-    postTitleEntry.place(x=70, y=10, relwidth=0.5, relheight=0.1)
-    postMessageLabel = tk.Label(editPost, text="Message: ")
-    postMessageLabel.place(x=10, y= 60, relwidth=0.15, relheight=0.1)
-    postMessageEntry = tk.Entry(editPost, textvariable=postMessage)
-    postMessage.set(post[0][2])
-    postMessageEntry.place(x=70, y=60, relwidth=0.5, relheight=0.3)
-    postUpdateButton = tk.Button(editPost, text="update", command=lambda h=post: updatePost(showAllPosts,editPost,location, id, postTitleEntry.get(), postMessageEntry.get()))
-    postUpdateButton.place(x=80, y=220, relwidth=0.25, relheight=0.1)
+    userId = post[0][3]
+    print("User ID: ", userId)
+    print("Critical Id: ", criticalId)
+    print("User: ", user)
+    print("Password: ", password)
+    if userId == criticalId:
+        postTitle = tk.StringVar()
+        postMessage = tk.StringVar()
+        print("Post from editPostAction: ", post)
+        print("Elementos del post editPostAction: ", post[0][1])
+        print("Elementos del post editPostAction: ", post[0][2])
+        postTitleLabel = tk.Label(editPost, text="Title: ")
+        postTitleLabel.place(x=10, y=10, relwidth=0.15, relheight=0.1)
+        postTitleEntry = tk.Entry(editPost, textvariable=postTitle)
+        postTitle.set(post[0][1])
+        postTitleEntry.place(x=70, y=10, relwidth=0.5, relheight=0.1)
+        postMessageLabel = tk.Label(editPost, text="Message: ")
+        postMessageLabel.place(x=10, y= 60, relwidth=0.15, relheight=0.1)
+        postMessageEntry = tk.Entry(editPost, textvariable=postMessage)
+        postMessage.set(post[0][2])
+        postMessageEntry.place(x=70, y=60, relwidth=0.5, relheight=0.3)
+        postUpdateButton = tk.Button(editPost, text="update", command=lambda h=post: updatePost(showAllPosts,editPost,location, id, postTitleEntry.get(), postMessageEntry.get()))
+        postUpdateButton.place(x=80, y=220, relwidth=0.25, relheight=0.1)
+    else:
+        advise = messagebox.askquestion(title="Error...", message="You can not edit that post, it is not of yours...")
+        if advise == "yes":
+            editPost.destroy()
+        else:
+            editPost.destroy()
 
 def deletePost(location, id):
     decision = messagebox.askquestion(title="Delete post...", message=f"Are you sure to del post {id}", icon="warning")
@@ -278,6 +291,8 @@ def registerAction(location):
     registerButton.pack(side="top")
 
 def signInAction():
+    global user
+    global password
     signIn = tk.Toplevel(window)
     nameFrame = tk.Frame(signIn)
     nameFrame.pack(side="top")
@@ -293,6 +308,8 @@ def signInAction():
     passwordEntry.pack()
     buttonFrame = tk.Frame(signIn)
     buttonFrame.pack(side="top")
+    user = nameEntry.get()
+    password = passwordEntry.get()
     buttonSignIn = tk.Button(buttonFrame, text="sign in", command=lambda: signInUser(signIn, nameEntry.get(), passwordEntry.get()))
     buttonSignIn.pack(side="top")
 
