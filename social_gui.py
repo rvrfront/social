@@ -216,18 +216,25 @@ def createPostAction(id):
     postTitleEntry.place(x=70, y=55, relwidth=0.7, relheight=0.1)
     #Se define un label ---> Please, insert the message
     postLabelMessage = tk.Label(post, text="Please, insert the message: ")
-    postLabelMessage.place(x=70, y=95, relwidth=0.7, relheight=0.1)
+    postLabelMessage.place(x=70, y=115, relwidth=0.7, relheight=0.1)
     #Se define un entry donde se guarda el cuerpo del mensaje del post
-    postEntryMessage = tk.Entry(post)
-    postEntryMessage.place(x=70, y=125, relwidth=0.7, relheight=0.4)
+    #postEntryMessage = tk.Entry(post)
+    #postEntryMessage.place(x=70, y=125, relwidth=0.7, relheight=0.4)
+
+    message = "Please, delete this text and type something of yours!"
+    postEntryMessage = tk.Text(post)
+    postEntryMessage.insert(tk.INSERT, message)
+    postEntryMessage.insert(tk.END, f"----end of post-----")
+    postEntryMessage.place(x=70, y=145, relwidth=0.7, relheight=0.4)
+
     #Se crea un label con un texto ya especificado como el autor que es el usuario logueado
     postAuthorLabel = tk.Label(post, text=getUser[0])
-    postAuthorLabel.place(x=70, y=320, relwidth=0.7, relheight=0.1)
+    postAuthorLabel.place(x=70, y=335, relwidth=0.7, relheight=0.1)
     #Se define un botón con el texto --> submit y que llama a la función
     #createAPost para almacenar el post en la tabla posts de la base de datos
     postButton = tk.Button(post, text="submit", command=lambda: createAPost(post, id, postTitleEntry.get(),
-                                                                            postEntryMessage.get()))
-    postButton.place(x=70, y=370, relwidth=0.7, relheight=0.1)
+                                                                            postEntryMessage.get("1.0", "end-1c")))
+    postButton.place(x=70, y=385, relwidth=0.7, relheight=0.1)
 
 #Función que se usa para editar los datos de un usuario ya existente en la tabla usaers de la
 #base de datos
