@@ -165,4 +165,15 @@ def getUserId(name, password):
     connection.close()
     return id
 
+def getUserLoggedIn(user, password):
+    connection = sq3.connect("social.db")
+    cursor = connection.cursor()
+    cursor.execute("SELECT id FROM users WHERE nick=? AND password=?", (user, password,))
+    userData = cursor.fetchall()
+    connection.commit()
+    connection.close()
+    print("UserData from getUserLoggedIn: ", userData)
+    return userData
+
+
 createDB("social.db")

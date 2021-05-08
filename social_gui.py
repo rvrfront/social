@@ -2,33 +2,32 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 import sqlite3 as sq3
-from social_sql import updateUserDB, searchAnUser, CreateAPost, getPosts, getPost, getOnePost, delPost, updatePost, getUserId
+from social_sql import updateUserDB, searchAnUser, CreateAPost, getPosts, getPost, getOnePost, delPost, updatePost, \
+    getUserId, getUserLoggedIn
 
 def editPostAction(location, id):
-    criticalId = getUserId(user, password)
+    global loggedUser
     editPost = tk.Toplevel(window)
     editPost.geometry("500x500")
-    post = getPost(id)
-    userId = post[0][3]
-    print("User ID: ", userId)
-    print("Critical Id: ", criticalId)
-    print("User: ", user)
-    print("Password: ", password)
-    if userId == criticalId:
+    post = getOnePost(id)
+    userId = post[0][2]
+    print("userId from editPostAction: ", userId)
+    print("loggedUser from editPostAction: ", loggedUser[0][0])
+    if userId == loggedUser[0][0]:
         postTitle = tk.StringVar()
         postMessage = tk.StringVar()
         print("Post from editPostAction: ", post)
+        print("Elementos del post editPostAction: ", post[0][0])
         print("Elementos del post editPostAction: ", post[0][1])
-        print("Elementos del post editPostAction: ", post[0][2])
         postTitleLabel = tk.Label(editPost, text="Title: ")
         postTitleLabel.place(x=10, y=10, relwidth=0.15, relheight=0.1)
         postTitleEntry = tk.Entry(editPost, textvariable=postTitle)
-        postTitle.set(post[0][1])
+        postTitle.set(post[0][0])
         postTitleEntry.place(x=70, y=10, relwidth=0.5, relheight=0.1)
         postMessageLabel = tk.Label(editPost, text="Message: ")
         postMessageLabel.place(x=10, y= 60, relwidth=0.15, relheight=0.1)
         postMessageEntry = tk.Entry(editPost, textvariable=postMessage)
-        postMessage.set(post[0][2])
+        postMessage.set(post[0][1])
         postMessageEntry.place(x=70, y=60, relwidth=0.5, relheight=0.3)
         postUpdateButton = tk.Button(editPost, text="update", command=lambda h=post: updatePost(showAllPosts,editPost,location, id, postTitleEntry.get(), postMessageEntry.get()))
         postUpdateButton.place(x=80, y=220, relwidth=0.25, relheight=0.1)
@@ -36,20 +35,30 @@ def editPostAction(location, id):
         advise = messagebox.askquestion(title="Error...", message="You can not edit that post, it is not of yours...")
         if advise == "yes":
             editPost.destroy()
+            location.destroy()
         else:
             editPost.destroy()
+            location.destroy()
 
 def deletePost(location, id):
-    decision = messagebox.askquestion(title="Delete post...", message=f"Are you sure to del post {id}", icon="warning")
-    if decision == "yes":
-        delPost(id)
-        messagebox.showwarning(title="Post deleted...", message=f"You have just deleted post: {id}")
-        location.destroy()
-        showAllPosts.destroy()
+    global loggedUser
+    selectedPost = getOnePost(id)
+    user_id = selectedPost[0][2]
+    if user_id == loggedUser[0][0]:
+        decision = messagebox.askquestion(title="Delete post...", message=f"Are you sure to del post {id}", icon="warning")
+        if decision == "yes":
+            delPost(id)
+            messagebox.showwarning(title="Post deleted...", message=f"You have just deleted post: {id}")
+            location.destroy()
+            showAllPosts.destroy()
+    else:
+        messagebox.showwarning(title="Error...", message="You are not the owner of this post!")
+    location.destroy()
+    showAllPosts.destroy()
 
 def showOnePost(id):
     post = getOnePost(id)
-    title = post[0][1]
+    title = post[0][0]
     author = post[0][2]
     message = f"Message: {post[0][1]}"
     print("Post: ", post)
@@ -189,6 +198,7 @@ def showUserAction(id, nick, password):
     buttonToShowPosts.place(x=60, y=65, relwidth=0.7, height=35)
 
 def signInUser(location, name, password):
+    global loggedUser
     try:
         connection = sq3.connect("social.db")
         cursor = connection.cursor()
@@ -202,6 +212,8 @@ def signInUser(location, name, password):
                 messagebox.showinfo(title="signed in...", message=f"User: {name} has been signed id properly!")
                 nick = True
                 logged = True
+                loggedUser = getUserLoggedIn(name, password)
+                print("loggedUser from signInUser: ", loggedUser)
                 showUserAction(user[0], user[5], user[6])
                 break
             elif user[5] == name and user[6] != password:
@@ -291,8 +303,6 @@ def registerAction(location):
     registerButton.pack(side="top")
 
 def signInAction():
-    global user
-    global password
     signIn = tk.Toplevel(window)
     nameFrame = tk.Frame(signIn)
     nameFrame.pack(side="top")
@@ -308,12 +318,10 @@ def signInAction():
     passwordEntry.pack()
     buttonFrame = tk.Frame(signIn)
     buttonFrame.pack(side="top")
-    user = nameEntry.get()
-    password = passwordEntry.get()
     buttonSignIn = tk.Button(buttonFrame, text="sign in", command=lambda: signInUser(signIn, nameEntry.get(), passwordEntry.get()))
     buttonSignIn.pack(side="top")
 
-
+loggedUser = list()
 window = tk.Tk()
 window.geometry("350x150")
 window.title("Python social network")
