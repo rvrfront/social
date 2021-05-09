@@ -22,4 +22,15 @@
 |                              | la base de datos                                                                                                               | 
 |                              | getAllUsers: función para obtener todos los usuarios de la tabla users de la base de datos                                     |
 |                              | registerNewUser: función para añadir un nuevo usuario a la tabla users en la base de datos                                     |
-|------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
+|   social_gui.py              | Archivo que contiene el diseño de la GUI junto con el uso de las funciones anteriormente descritas                             |
+|                              | editPostAction: función que se usa para editar un post en concreto de la tabla posts de la base de datos                       |
+|                              | deletePost: función que se usa para eliminar un post en concreto de la tabla posts de la base de datos                         |
+|                              | showOnePost: función que se usa para mostrar un post en concreto de la tabla posts de la base dedatos                          |
+|                              | showPosts: funciónq que se usa para mostrar todos los posts de la tbala posts de la base de datos                              |
+|                              | createPostAction: función que se usa para crear un post en la tabla posts de la base de datos                                  |
+|                              | updateUser: función que se usa para editar/actualizar los datos de un usuario en la tabla users de la base de datos            |
+|                              | editProfileAction: función para mostrar la interfaz para crear un nuevo usuario en la tabla users de la base de datos          |
+|                              | showUserAction: función que se usa para mostrar las distintas acciones que tiene un usuario logueado                           |
+|                              | signInUser: función que se usa para hacer el proceso de login de un usuario                                                    |
+|                              | registerUser: función que se usa registrar un nuevo usuario en la tabla users de la base de datos                              |
+|                              | registerAction: función que crea la interfaz para el proceso de registro de un nuevo usuario                                   | |                              | signInAction: función crea la interfaz para el proceso de login de un usuario                                                  |  
