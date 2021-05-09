@@ -34,6 +34,8 @@
 |                              | signInUser: función que se usa para hacer el proceso de login de un usuario                                                    |
 |                              | registerUser: función que se usa registrar un nuevo usuario en la tabla users de la base de datos                              |
 |                              | registerAction: función que crea la interfaz para el proceso de registro de un nuevo usuario                                   | |                              | signInAction: función crea la interfaz para el proceso de login de un usuario                                                  | |------------------------------|--------------------------------------------------------------------------------------------------------------------------------| 
+
+
 A continuación se muestra las siguientes capturas de pantalla:
 -Interfaz inicial register/login:
 
