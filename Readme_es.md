@@ -3,11 +3,10 @@
 |     Nombre archivo.          |  Descripcion                                          |
 |------------------------------|-------------------------------------------------------|
 |   social.db                  |  Base de datos que contiene:                          |
-|                              | - users: tabla donde se almacena los usuarios         |
-|                              | - posts: tabla donde se almacena los posts            |
-|                              | - comments: tabla donde se almacena los comments.     |
-|                              | - likes: tabla donde almacena los likes.              |
-|------------------------------|-------------------------------------------------------|
+|                              | -users: tabla donde se almacena los usuarios          |
+|                              | -posts: tabla donde se almacena los posts             |
+|                              | -comments: tabla donde se almacena los comments .     |
+|                              | -likes: tabla donde almacena los likes.               |
 |   social_slq.py              | Archivo donde se tiene todas las funciones que atacan |
 |                              | la base de datos, como por ejemplo:                   |
 |                              | - createDB: función para inicialiar la base de datos  |
