@@ -1,5 +1,6 @@
-#Pequeña red social desarrollada en python + tkinter
-##El directorio de archivos de este repositorio es el siguiente:
+# Pequeña red social desarrollada en python + tkinter
+## El directorio de archivos de este repositorio es el siguiente:
+
 |     Nombre archivo.          |  Descripcion                                                                                                                   |
 |------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
 |   social.db                  |Base de datos que contiene:                                                                                                     |
