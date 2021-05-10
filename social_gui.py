@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
-import sqlite3 as sq3
+#import sqlite3 as sq3
 from social_sql import updateUserDB, searchAnUser, createAPost, getPosts, getOnePost, delPost, updatePost, \
-    getUserId, getUserLoggedIn, getAllUsers, registerNewUser
+     getUserLoggedIn, getAllUsers, registerNewUser
 
 #Función usada para editar un post concreto
 def editPostAction(location, id):
@@ -43,14 +43,22 @@ def editPostAction(location, id):
         postMessageLabel = tk.Label(editPost, text="Message: ")
         postMessageLabel.place(x=10, y= 60, relwidth=0.15, relheight=0.1)
         #Se crea un entry en la interfaz asociado a la variable de control ---> postMessage
-        postMessageEntry = tk.Entry(editPost, textvariable=postMessage)
+        #postMessageEntry = tk.Entry(editPost, textvariable=postMessage)
+
+        ########################################################################
+        postMessageEntry = tk.Text(editPost)
+        postMessageEntry.insert(tk.INSERT, post[0][1])
+        postMessageEntry.insert(tk.END, f"----end of post-----")
+        postMessageEntry.place(x=70, y=60, relwidth=0.7, relheight=0.4)
+
+        ########################################################################
         #Se setea el entry anterior con el valor en post[0][1]   ---> el cuerpo del mensaje del post con
         #determinado id
-        postMessage.set(post[0][1])
-        postMessageEntry.place(x=70, y=60, relwidth=0.5, relheight=0.3)
+        #postMessage.set(post[0][1])
+        #postMessageEntry.place(x=70, y=60, relwidth=0.5, relheight=0.3)
         #Se crea un botón en la interfaz que llama a la función updatePost ---> para que actualice el post en la base de datos
-        postUpdateButton = tk.Button(editPost, text="update", command=lambda h=post: updatePost(showAllPosts,editPost,location, id, postTitleEntry.get(), postMessageEntry.get()))
-        postUpdateButton.place(x=80, y=220, relwidth=0.25, relheight=0.1)
+        postUpdateButton = tk.Button(editPost, text="update", command=lambda h=post: updatePost(showAllPosts, editPost, location, id, postTitleEntry.get(), postMessageEntry.get("1.0", "end-1c")))
+        postUpdateButton.place(x=80, y=280, relwidth=0.25, relheight=0.1)
     else:
         #En caso de que el usuario logueado no sea el autor del post no se le permite modificarlo
         #Se muestra un mensaje en pantalla preguntando por una respuesta ---> en cualquier caso la
@@ -152,6 +160,11 @@ def showPosts():
     #Se crea una nueva interfaz showAllPosts cuyo padre es Window, definido previamente3
     #como global
     showAllPosts = tk.Toplevel(window)
+    scrollbar = tk.Scrollbar(showAllPosts)
+    showAllPostsCanvas = tk.Canvas(showAllPosts, yscrollcommand=scrollbar.set)
+    scrollbar.config(command=showAllPostsCanvas.yview)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    showAllPostsCanvas.place(x=10, y=10, relwidth=0.75, relheight=0.9)
     #Se le asigna unas dimensiones de 500x600 px
     showAllPosts.geometry("500x600")
     #Se establecen las posiciones iniciales de cada uno de los posts
@@ -178,7 +191,7 @@ def showPosts():
             #En command se le debe pasar una lambda function con un parámetro c que se va
             #actualizando para cada post de la lista de posts que se obtenga de la base de datos
             #para que al hacer click en cada botón se desencadene la acción de abrir un determinado post
-            postsList.append(tk.Button(showAllPosts, text=f"title: {title} || user: {user_id}", command=lambda c=id: showOnePost(c)).place(x=incx, y=incy, relwidth=0.9, relheight=0.1))
+            postsList.append(tk.Button(showAllPostsCanvas, text=f"title: {title} || user: {user_id}", command=lambda c=id: showOnePost(c)).place(x=incx, y=incy, relwidth=0.9, relheight=0.1))
             #El valor de incy se incrementa en 85px para que no se solapen los posts mostrados
             incy += 85
     else:
@@ -229,12 +242,12 @@ def createPostAction(id):
 
     #Se crea un label con un texto ya especificado como el autor que es el usuario logueado
     postAuthorLabel = tk.Label(post, text=getUser[0])
-    postAuthorLabel.place(x=70, y=335, relwidth=0.7, relheight=0.1)
+    postAuthorLabel.place(x=70, y=365, relwidth=0.7, relheight=0.1)
     #Se define un botón con el texto --> submit y que llama a la función
     #createAPost para almacenar el post en la tabla posts de la base de datos
     postButton = tk.Button(post, text="submit", command=lambda: createAPost(post, id, postTitleEntry.get(),
                                                                             postEntryMessage.get("1.0", "end-1c")))
-    postButton.place(x=70, y=385, relwidth=0.7, relheight=0.1)
+    postButton.place(x=70, y=415, relwidth=0.7, relheight=0.1)
 
 #Función que se usa para editar los datos de un usuario ya existente en la tabla usaers de la
 #base de datos

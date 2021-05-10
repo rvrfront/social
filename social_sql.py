@@ -154,21 +154,6 @@ def updatePost(location1, location2,location3, id, title, message):
     except:
         messagebox.showerror(title="Error From updatePost", message=f"I colud not update post: {id}")
 
-#Función que obtiene un determinado post de la tabla de posts
-#de la base de datos
-def getPost(id):
-    try:
-        connection = sq3.connect("social.db")
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM posts WHERE id=?", (id,))
-        post = cursor.fetchall()
-        print("Post from getPost social_sql: ", post)
-        connection.commit()
-        connection.close()
-        return post
-    except:
-        messagebox.showerror(title="Error From getPost", message=f"I could not get post: {id}")
-
 #Función que obtiene todos los posts de la table posts de la
 #base de datos
 def getPosts():
