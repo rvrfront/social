@@ -288,55 +288,57 @@ def editProfileAction(id):
     editProfile.geometry("250x650")
     #Se define una label ---> Please, insert your new name:
     nameLabel = tk.Label(editProfile, text="Please, insert your new name: ")
-    nameLabel.place(x=10, y=10, relwidth=0.8, relheight=0.08)
+    nameLabel.place(x=10, y=10, relwidth=0.8, relheight=0.05)
     #Se defina un entry para guardar el nombre el usuario
     nameEntry = tk.Entry(editProfile)
-    nameEntry.place(x=10, y=50, relwidth=0.8, relheight=0.08)
+    nameEntry.place(x=10, y=60, relwidth=0.8, relheight=0.05)
     #Se define un label ---> Please, insert your new age:
     ageLabel = tk.Label(editProfile, text="Please, insert your new age: ")
-    ageLabel.place(x=10, y=90, relwidth=0.8, relheight=0.08)
+    ageLabel.place(x=10, y=100, relwidth=0.8, relheight=0.05)
     #Se define un entry donde se almacena la edad del usuario
     ageEntry = tk.Entry(editProfile)
-    ageEntry.place(x=10, y=130, relwidth=0.8, relheight=0.08)
+    ageEntry.place(x=10, y=140, relwidth=0.8, relheight=0.05)
+    genderFrame = tk.Frame(editProfile)
+    genderFrame.place(x=10, y= 190, relwidth=0.8, relheight=0.2)
     #Se define un label ---> Please, select your gender:
-    genderLabel = tk.Label(editProfile, text="Please, select your gender: ")
-    genderLabel.place(x=10, y=170, relwidth=0.8, relheight=0.08)
+    genderLabel = tk.Label(genderFrame, text="Please, select your gender: ")
+    genderLabel.pack()
     #En este caso se usa a modo de ejemplo radiobuttons
-    tk.Radiobutton(editProfile, text="Mujer", variable=gender, value=1).place(x=10, y=180, relwidth=0.25, relheight=0.08)
-    tk.Radiobutton(editProfile, text="Hombre", variable=gender, value=2).place(x=120, y=180, relwidth=0.25, relheight=0.08)
+    tk.Radiobutton(genderFrame, text="Mujer", variable=gender, value=1).pack()
+    tk.Radiobutton(genderFrame, text="Hombre", variable=gender, value=2).pack()
     #Se define un label ----> Please, select your country
     nationalityLabel = tk.Label(editProfile, text="Please, select your country")
-    nationalityLabel.place(x=10, y=240, relwidth=0.8, relheight=0.08)
+    nationalityLabel.place(x=10, y=260, relwidth=0.8, relheight=0.05)
     #En este caso el pais se selecciona desde una lista desplegable
     #cuyos valores posibles son los definidos previemante en el objeto
     #countries
     nationality = ttk.Combobox(editProfile, state="readonly")
-    nationality.place(x=10, y=270, relwidth=0.8, relheight=0.1)
+    nationality.place(x=10, y=280, relwidth=0.8, relheight=0.1)
     nationality["values"] = countries
     #Se define un label ----> Please, insert your new nickname
     nickLabel = tk.Label(editProfile, text="Please, insert your new nickname: ")
-    nickLabel.place(x=10, y=310, relwidth=0.8, relheight=0.08)
+    nickLabel.place(x=10, y=330, relwidth=0.8, relheight=0.05)
     #Se define un entry para almacenar el valor de nickname
     nickEntry = tk.Entry(editProfile)
-    nickEntry.place(x=10, y=350, relwidth=0.8, relheight=0.08)
+    nickEntry.place(x=10, y=370, relwidth=0.8, relheight=0.05)
     #Se define un label ---> Please, entry your new password
     passwordLabel = tk.Label(editProfile, text="Please, entry your new password: ")
-    passwordLabel.place(x=10, y=380, relwidth=0.8, relheight=0.08)
+    passwordLabel.place(x=10, y=400, relwidth=0.8, relheight=0.05)
     #Se define un entry para almacenar la contraseña
     #Se usa el argumento show="*" para que no muestra la contraseña y la
     #oculte con *****
     passwordEntry = tk.Entry(editProfile, show="*")
-    passwordEntry.place(x=10, y=420, relwidth=0.8, relheight=0.08)
+    passwordEntry.place(x=10, y=440, relwidth=0.8, relheight=0.05)
     #Se define un label para confirmar contraseña ----> Please, confirm your password
     passwordLabel2 = tk.Label(editProfile, text="Please, confirm your password: ")
-    passwordLabel2.place(x = 10, y=460, relwidth=0.8, relheight=0.08)
+    passwordLabel2.place(x = 10, y=480, relwidth=0.8, relheight=0.05)
     #Se define un entry para almacenar el valor de la confirmacion de contraseña
     passwordEntry2 = tk.Entry(editProfile, show="*")
-    passwordEntry2.place(x=10, y=490, relwidth=0.8, relheight=0.08)
+    passwordEntry2.place(x=10, y=510, relwidth=0.8, relheight=0.05)
     #Se define un botón con el texto "update user" y que llama a la función updateUser
     #para actualizar los datos de ese usuario en la tabla users en la base de datos
     buttonToSave = tk.Button(editProfile, text="update user", command=lambda: updateUser(editProfile, id, nameEntry.get(), ageEntry.get(), gender.get(), nationality.get(), nickEntry.get(), passwordEntry.get(), passwordEntry2.get()))
-    buttonToSave.place(x=10, y=530, relwidth=0.8, relheight=0.08)
+    buttonToSave.place(x=10, y=550, relwidth=0.8, relheight=0.08)
 
 
 #Función que se usa para mostrar las distintas acciones que tiene un

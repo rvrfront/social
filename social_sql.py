@@ -110,7 +110,6 @@ def searchAnUser(id):
         cursor = connection.cursor()
         cursor.execute("SELECT name FROM users WHERE id=?", (id,))
         user = cursor.fetchone()
-        connection.commit()
         connection.close()
         print("Searched user is: ", user)
         return user
@@ -162,7 +161,6 @@ def getPosts():
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM posts")
         posts = cursor.fetchall()
-        connection.commit()
         connection.close()
         return posts
     except:
@@ -176,7 +174,6 @@ def getOnePost(id):
         cursor = connection.cursor()
         cursor.execute("SELECT title, description, user_id FROM posts WHERE id=?", (id,))
         post = cursor.fetchall()
-        connection.commit()
         connection.close()
         return post
     except:
@@ -203,7 +200,6 @@ def getUserId(name, password):
         cursor.execute("SELECT id FROM users WHERE nick =? AND password=?", (name, password,))
         id = cursor.fetchall()
         print("Id from getUSer sql: ", id)
-        connection.commit()
         connection.close()
         return id
     except:
@@ -216,7 +212,6 @@ def getUserLoggedIn(user, password):
         cursor = connection.cursor()
         cursor.execute("SELECT id FROM users WHERE nick=? AND password=?", (user, password,))
         userData = cursor.fetchall()
-        connection.commit()
         connection.close()
         print("UserData from getUserLoggedIn: ", userData)
         return userData
@@ -231,7 +226,6 @@ def getAllUsers():
         cursor = connection.cursor()
         cursor.execute("SELECT * FROM users")
         users = cursor.fetchall()
-        connection.commit()
         connection.close()
         return users
     except:
